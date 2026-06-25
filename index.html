@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<!-- บอกเบราว์เซอร์ว่านี่คือไฟล์ HTML เวอร์ชันล่าสุด (HTML5) — ต้องมีบรรทัดแรกเสมอ -->
+
+<html lang="th" data-theme="light">
+<!-- lang="th" บอกว่าหน้านี้เป็นภาษาไทย -->
+<!-- data-theme="light" คือ attribute พิเศษที่ JS จะมาเปลี่ยนเป็น "dark" ตอนกดปุ่มสลับธีม -->
+<!-- เมื่อเปลี่ยนแล้ว CSS ชุด [data-theme="dark"] จะทำงานทันทีโดยไม่ต้องโหลดหน้าใหม่ -->
+
+<head>
+    <!-- ───────────────────────────────────────────────────────
+       <head> คือส่วนตั้งค่าทั้งหมด — ผู้ใช้ไม่เห็น แต่เบราว์เซอร์ต้องอ่าน
+  ─────────────────────────────────────────────────────────── -->
+
+    <meta charset="UTF-8" />
+    <!-- UTF-8 คือมาตรฐานการอ่านตัวอักษร — ถ้าไม่มีบรรทัดนี้ ภาษาไทยจะแสดงเป็นตัวแปลก ๆ -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ทำให้หน้าเว็บพอดีกับขนาดหน้าจอมือถือ -->
+    <!-- width=device-width = ความกว้างหน้าเว็บ = ความกว้างหน้าจอจริง -->
+    <!-- initial-scale=1.0 = ไม่ซูมเข้าหรือออกตอนเปิด -->
+
+    <title>โสภณัฐ สีภักดี — DevPool 2569</title>
+    <!-- ข้อความที่แสดงบน Tab ของเบราว์เซอร์ -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- เชื่อมต่อ Google Fonts ล่วงหน้า เพื่อให้โหลดฟอนต์เร็วขึ้น -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <!-- โหลดฟอนต์ 2 ตระกูลจาก Google Fonts ผ่านอินเทอร์เน็ต -->
+    <!-- Sarabun = ฟอนต์ภาษาไทย, Space Grotesk = ฟอนต์ภาษาอังกฤษ/ตัวเลข -->
+    <!-- wght@300;400;600;700 = โหลดน้ำหนักตัวอักษร light, regular, semibold, bold -->
+
+    <style>
+        /* ═══════════════════════════════════════════════════════
+       CSS TOKEN SYSTEM — ระบบตัวแปรสีและค่าต่าง ๆ
+       แนวคิด: เก็บค่าที่ใช้ซ้ำบ่อยไว้ในตัวแปร
+       แก้ที่นี่ที่เดียว → เปลี่ยนทั้งหน้าเว็บ
+    ═══════════════════════════════════════════════════════ */
+
+        :root {
+            /* :root หมายถึง tag <html> นอกสุด — ตัวแปรที่ประกาศที่นี่ใช้ได้ทุกที่ในไฟล์ */
+            /* ตัวแปรใน CSS ขึ้นต้นด้วย -- เรียกว่า CSS Custom Property */
+            /* วิธีใช้: เขียน var(--ชื่อตัวแปร) แทนค่าจริง เช่น var(--accent) แทน #F97316 */
+
+            --bg: #F8F9FB;
+            /* สีพื้นหลังหน้า — ขาวอมเทาอ่อน */
+            --bg-card: #FFFFFF;
+            /* สีพื้นหลัง card — ขาวสะอาด */
+            --border: #E4E8EF;
+            /* สีเส้นขอบต่าง ๆ — เทาอ่อน */
+            --text-main: #0F172A;
+            /* สีตัวอักษรหลัก — navy เข้มเกือบดำ */
+            --text-sub: #64748B;
+            /* สีตัวอักษรรอง — เทากลาง */
+            --accent: #F97316;
+            /* สีเน้น PEA Orange */
+            --accent2: #1D4ED8;
+            /* สีเน้นรอง — น้ำเงินไฟฟ้า */
+            --tag-bg: #EFF6FF;
+            /* พื้นหลัง tag/badge — ฟ้าซีดมาก */
+            --tag-text: #1D4ED8;
+            /* ตัวอักษรใน tag — น้ำเงิน */
+            --timeline-line: #CBD5E1;
+            /* สีเส้นไทม์ไลน์ */
+            --shadow: 0 2px 16px rgba(0, 0, 0, .07);
+            /* ค่าเงาใต้ card */
+            /* rgba(0,0,0,.07) = ดำ ความทึบแสง 7% = เงาเบามาก */
+            --radius: 14px;
+            /* ความโค้งมนของมุม card */
+            --transition: .25s cubic-bezier(.4, 0, .2, 1);
+            /* ความเร็วและลักษณะการเปลี่ยน animation — .25s = 250ms */
+            /* cubic-bezier คือสูตรคำนวณความเร็วของ animation (เริ่มเร็ว-ช้าลง) */
+        }
+
+        /* ───── ชุดสีโหมดมืด ─────────────────────────────────
+       CSS เลือก element <html> ที่มี attribute data-theme="dark"
+       เมื่อ JS เปลี่ยน data-theme ตัวแปรชุดนี้จะแทนที่ชุดบน
+       ทำให้ทั้งหน้าเปลี่ยนสีโดยไม่ต้องแก้ CSS ส่วนอื่นเลย
+    ─────────────────────────────────────────────────────── */
+        [data-theme="dark"] {
+            --bg: #0D1117;
+            /* พื้นหลัง — เกือบดำ (โทน GitHub Dark) */
+            --bg-card: #161B22;
+            /* card — เข้มกว่าพื้นหลังนิดหน่อย */
+            --border: #30363D;
+            /* เส้นขอบ — เทาเข้ม */
+            --text-main: #E6EDF3;
+            /* ตัวอักษรหลัก — ขาวอมเทา */
+            --text-sub: #8B949E;
+            /* ตัวอักษรรอง — เทากลาง */
+            --accent: #FB923C;
+            /* สีเน้น — ส้มสว่างขึ้นให้เห็นบนพื้นมืด */
+            --accent2: #60A5FA;
+            /* สีเน้นรอง — ฟ้าสว่างขึ้น */
+            --tag-bg: #1E2D45;
+            /* พื้น tag — น้ำเงินเข้ม */
+            --tag-text: #60A5FA;
+            /* ตัวอักษร tag — ฟ้าสว่าง */
+            --timeline-line: #30363D;
+            --shadow: 0 2px 20px rgba(0, 0, 0, .4);
+            /* เงาเข้มขึ้นบนพื้นมืด */
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       RESET & BASE — ล้างค่าเริ่มต้นของเบราว์เซอร์
+       ปัญหา: แต่ละเบราว์เซอร์มีค่า default ต่างกัน เช่น h1 มี margin ติดมาเอง
+       วิธีแก้: ล้างให้หมด แล้วกำหนดเองทั้งหมด
+    ═══════════════════════════════════════════════════════ */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            /* ความกว้าง element รวม border และ padding ด้วย */
+            /* เบราว์เซอร์ default: ความกว้าง 100px + padding 20px = จริง 120px (พัง layout) */
+            /* box-sizing: border-box: ความกว้าง 100px รวม padding แล้ว = ยังเป็น 100px */
+            margin: 0;
+            /* ลบ margin ที่ติดมากับ element ทุกตัว */
+            padding: 0;
+            /* ลบ padding ที่ติดมากับ element ทุกตัว */
+        }
+
+        /* * หมายถึง "ทุก element" บนหน้า */
+        /* *::before และ *::after คือ pseudo-element ที่ CSS สร้างขึ้นเอง */
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* เมื่อ scroll หรือกดลิงก์ภายในหน้า จะค่อย ๆ เลื่อนแบบ smooth แทนกระโดด */
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            /* ฟอนต์หลักทั้งหน้า — ถ้าโหลด Sarabun ไม่ได้ ใช้ฟอนต์ sans-serif ของระบบแทน */
+            background: var(--bg);
+            /* สีพื้นหลัง — ดึงจากตัวแปร */
+            color: var(--text-main);
+            /* สีตัวอักษร — ดึงจากตัวแปร */
+            transition: background var(--transition), color var(--transition);
+            /* animation ตอนสลับธีม — ทำให้สีเปลี่ยนแบบ fade แทนกระพริบ */
+            line-height: 1.6;
+            /* ระยะห่างระหว่างบรรทัด 1.6 เท่าของขนาดตัวอักษร */
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       THEME TOGGLE BUTTON — ปุ่มสลับธีมมุมขวาบน
+    ═══════════════════════════════════════════════════════ */
+
+        #theme-toggle {
+            /* # นำหน้า = เลือก element ที่มี id="theme-toggle" */
+            position: fixed;
+            /* ค้างอยู่ตำแหน่งเดิมแม้ scroll หน้าไปเรื่อย ๆ */
+            top: 18px;
+            right: 18px;
+            /* ห่างจากขอบบน 18px, ขอบขวา 18px */
+            z-index: 100;
+            /* ลอยอยู่เหนือ element อื่น (ยิ่งมาก ยิ่งอยู่บนสุด) */
+            background: var(--bg-card);
+            /* สีพื้นหลังปุ่ม */
+            border: 1.5px solid var(--border);
+            /* เส้นขอบ */
+            border-radius: 50px;
+            /* โค้งมนมาก — ทำให้เป็นทรงยาวรี (pill shape) */
+            padding: 7px 14px;
+            /* ระยะห่างภายใน บน-ล่าง 7px, ซ้าย-ขวา 14px */
+            font-size: .85rem;
+            /* rem = relative to root, .85rem = 85% ของขนาด default */
+            cursor: pointer;
+            /* เปลี่ยน cursor เป็นรูปมือเมื่อเอาเมาส์ไปวาง */
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            /* เงาใต้ปุ่ม */
+            transition: background var(--transition), color var(--transition), border var(--transition);
+            /* animation เมื่อสลับธีม */
+            display: flex;
+            /* จัด emoji และข้อความเรียงแนวนอน */
+            align-items: center;
+            /* จัดกึ่งกลางแนวตั้ง */
+            gap: 6px;
+            /* ช่องว่างระหว่าง emoji และข้อความ */
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        #theme-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        /* :hover = เมื่อเอาเมาส์ไปวาง — เส้นขอบเปลี่ยนเป็นสีส้ม */
+
+
+        /* ═══════════════════════════════════════════════════════
+       HERO SECTION — หน้าแรกที่เห็นตอนเปิดเว็บ
+    ═══════════════════════════════════════════════════════ */
+
+        .hero {
+            /* . นำหน้า = เลือก element ที่มี class="hero" */
+            min-height: 100vh;
+            /* สูงอย่างน้อย 100% ของหน้าจอ (vh = viewport height) */
+            display: flex;
+            /* เปิดใช้ Flexbox สำหรับจัดตำแหน่งเนื้อหาข้างใน */
+            flex-direction: column;
+            /* เรียง element ในแนวตั้ง (บน → ล่าง) */
+            justify-content: center;
+            /* จัดกึ่งกลางในแนวตั้ง */
+            align-items: center;
+            /* จัดกึ่งกลางในแนวขวาง */
+            text-align: center;
+            /* ตัวอักษรกึ่งกลาง */
+            padding: 80px 24px 60px;
+            /* บน 80px, ซ้าย-ขวา 24px, ล่าง 60px */
+            position: relative;
+            /* ทำให้ ::before และ ::after ยึดตำแหน่งเทียบกับ hero */
+            overflow: hidden;
+            /* ซ่อนส่วนที่เกินขอบ hero ออกไป */
+        }
+
+        /* ─── เส้นกริดพื้นหลัง (Signature Element) ─────────── */
+        .hero::before {
+            /* ::before = สร้าง element เสมือนก่อน content ของ .hero โดยไม่เขียน HTML */
+            content: '';
+            /* ต้องมีเสมอ ถึงแม้จะว่างเปล่า — บอกว่าสร้าง element นี้ขึ้นจริง */
+            position: absolute;
+            /* ลอยอยู่ในตำแหน่งที่กำหนดเทียบกับ .hero */
+            inset: 0;
+            /* inset: 0 = top:0, right:0, bottom:0, left:0 = ขยายเต็ม hero */
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                /* เส้นแนวนอน ทุก 48px */
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            /* เส้นแนวตั้ง ทุก 48px */
+            /* ซ้อน 2 gradient ทำให้เกิดลายตาราง */
+            background-size: 48px 48px;
+            /* ขนาดช่องตาราง 48×48px */
+            opacity: .45;
+            /* ความทึบแสง 45% — กริดจางๆ ไม่แย่งตา */
+            pointer-events: none;
+            /* ให้เมาส์ทะลุผ่านได้ ไม่รบกวนการคลิก */
+        }
+
+        /* ─── Gradient วงกลมทับกริด ─────────────────────────── */
+        .hero::after {
+            /* ::after = สร้าง element เสมือนหลัง content ของ .hero */
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 65% 60% at 50% 50%,
+                    transparent 40%, var(--bg) 100%);
+            /* radial-gradient วงรี กว้าง 65% สูง 60% ศูนย์กลางตรงกลาง */
+            /* ตรงกลาง: โปร่งใส (กริดเห็นได้) */
+            /* ขอบนอก: ค่อย ๆ จางเป็นสีพื้นหลัง (กริดหายไป) */
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            /* ทำให้อยู่เหนือ ::before และ ::after */
+            z-index: 1;
+            /* ยืนยันว่าอยู่บนสุด */
+            max-width: 700px;
+            /* ข้อความไม่ยืดเกิน 700px บนจอใหญ่ */
+        }
+
+        /* ─── Avatar (รูปโปรไฟล์) ─────────────────────────── */
+        .avatar-wrap {
+            width: 130px;
+            height: 130px;
+            /* ขนาด 130×130px */
+            border-radius: 50%;
+            /* ทำสี่เหลี่ยมให้กลายเป็นวงกลม */
+            margin: 0 auto 24px;
+            /* บน 0, ซ้าย-ขวา auto (กึ่งกลาง), ล่าง 24px */
+            border: 4px solid var(--accent);
+            /* วงกลมสีส้มรอบรูป */
+            overflow: hidden;
+            /* ซ่อนส่วนรูปที่เกินวงกลม */
+            box-shadow: 0 0 0 8px rgba(249, 115, 22, .12);
+            /* box-shadow: offset-x offset-y blur spread color */
+            /* 0 0 0 8px = ไม่มี offset ไม่มี blur แต่ขยาย 8px = วงแหวนรอบนอก */
+            /* rgba(249,115,22,.12) = สีส้ม ความทึบ 12% */
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* object-fit: cover = ปรับรูปให้เต็มกรอบโดยไม่บิดเบี้ยว (ตัดส่วนเกิน) */
+
+        .avatar-placeholder {
+            /* ใช้แทนรูปจริงถ้ายังไม่มี — แสดงตัวอักษรแรกของชื่อ */
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent2), var(--accent));
+            /* gradient 135 องศา (ทแยงมุม) จากน้ำเงินไปส้ม */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        /* ─── ข้อความ Hero ────────────────────────────────── */
+        .hero-eyebrow {
+            /* ข้อความเล็กๆ เหนือชื่อ — บอกสังกัด */
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .14em;
+            /* เพิ่มช่องว่างระหว่างตัวอักษร ทำให้ดู elegant */
+            color: var(--accent);
+            text-transform: uppercase;
+            /* แปลงตัวอักษรเป็นตัวพิมพ์ใหญ่ทั้งหมด */
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 3.4rem);
+            /* clamp(min, preferred, max) = ขนาดตัวอักษรยืดหยุ่น */
+            /* เล็กสุด 2rem, ปกติ 6% ของความกว้างจอ, ใหญ่สุด 3.4rem */
+            /* ทำให้ขนาดตัวอักษรเหมาะกับทุกขนาดหน้าจออัตโนมัติ */
+            font-weight: 700;
+            /* ตัวหนา */
+            line-height: 1.15;
+            /* ระยะห่างบรรทัดแน่นขึ้น เหมาะกับหัวข้อใหญ่ */
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            color: var(--accent2);
+        }
+
+        /* ทำให้นามสกุล "สีภักดี" เป็นสีน้ำเงิน */
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: var(--text-sub);
+            /* สีเทา — ลดความสำคัญรองจากชื่อ */
+            margin-bottom: 28px;
+        }
+
+        /* ─── Badge/Tag ทักษะ ─────────────────────────────── */
+        .badge-row {
+            display: flex;
+            /* เรียงแนวนอน */
+            flex-wrap: wrap;
+            /* ขึ้นบรรทัดใหม่ถ้าไม่พอ (responsive อัตโนมัติ) */
+            gap: 10px;
+            /* ช่องว่างระหว่าง badge */
+            justify-content: center;
+            margin-bottom: 36px;
+        }
+
+        .badge {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 5px 14px;
+            border-radius: 50px;
+            /* ทรงยาวรี pill shape */
+            font-size: .82rem;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* ─── ลูกศรเด้ง ────────────────────────────────────── */
+        .scroll-hint {
+            font-size: .8rem;
+            color: var(--text-sub);
+            letter-spacing: .05em;
+            animation: bounce 2s infinite;
+            /* เล่น animation ชื่อ bounce ซ้ำ ทุก 2 วินาที */
+        }
+
+        @keyframes bounce {
+
+            /* @keyframes กำหนด "ฉากของ animation" ทีละ % ของเวลา */
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            /* เริ่มต้น-จบ: อยู่ที่เดิม */
+            50% {
+                transform: translateY(6px);
+            }
+
+            /* กลางทาง: เลื่อนลง 6px */
+            /* translateY = เลื่อนแนวตั้ง (Y-axis) */
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       SECTION LAYOUT — โครงหน้าส่วนต่าง ๆ (เนื้อหาด้านล่าง)
+    ═══════════════════════════════════════════════════════ */
+
+        .section {
+            max-width: 860px;
+            /* กว้างสุดไม่เกิน 860px */
+            margin: 0 auto;
+            /* 0 = บน-ล่าง, auto = ซ้าย-ขวาเท่ากัน → อยู่กึ่งกลาง */
+            padding: 60px 24px;
+            /* บน-ล่าง 60px, ซ้าย-ขวา 24px */
+            border-top: 1px solid var(--border);
+            /* เส้นคั่นระหว่าง section */
+        }
+
+        .section-label {
+            /* ป้ายเล็กสีส้มเหนือหัวข้อ */
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            /* ขนาดยืดหยุ่นตามจอ */
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       CARD — กล่องเนื้อหาทั่วไป
+    ═══════════════════════════════════════════════════════ */
+
+        .card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            /* ดึงจากตัวแปร = 14px */
+            padding: 24px 28px;
+            box-shadow: var(--shadow);
+            /* เงาใต้ card */
+            transition: background var(--transition), border var(--transition);
+        }
+
+        .card+.card {
+            margin-top: 14px;
+        }
+
+        /* .card + .card = card ที่อยู่ถัดจาก card (adjacent sibling selector) */
+        /* เพิ่ม margin เฉพาะ card ที่ 2, 3, ... ไม่ใส่ให้ card แรก */
+
+
+        /* ═══════════════════════════════════════════════════════
+       SKILLS GRID — ตาราง card ทักษะ
+    ═══════════════════════════════════════════════════════ */
+
+        .skills-grid {
+            display: grid;
+            /* เปิดใช้ CSS Grid */
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            /* repeat(auto-fill, ...) = สร้างคอลัมน์อัตโนมัติให้เต็มแถว */
+            /* minmax(170px, 1fr) = แต่ละคอลัมน์กว้างอย่างน้อย 170px แต่ยืดได้ */
+            /* ผล: จอใหญ่ = 4 คอลัมน์, จอเล็ก = 2 หรือ 1 คอลัมน์ — responsive อัตโนมัติ */
+            gap: 12px;
+            /* ช่องว่างระหว่าง cell ทั้งแนวนอนและแนวตั้ง */
+        }
+
+        .skill-item {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            transition: transform .15s, border-color .15s;
+            /* animation เมื่อ hover */
+            cursor: default;
+            /* cursor ปกติ ไม่ใช่รูปมือ */
+        }
+
+        .skill-item:hover {
+            transform: translateY(-3px);
+            /* ลอยขึ้น 3px เมื่อเอาเมาส์ไปวาง */
+            border-color: var(--accent2);
+            /* เส้นขอบเปลี่ยนเป็นน้ำเงิน */
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+            width: 38px;
+            height: 38px;
+            background: var(--tag-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            /* ไม่ให้ icon หดตัวเมื่อ text ยาว */
+        }
+
+        .skill-name {
+            font-weight: 600;
+            font-size: .9rem;
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       TIMELINE — เส้นประวัติการทำงาน
+    ═══════════════════════════════════════════════════════ */
+
+        .timeline {
+            position: relative;
+            /* ทำให้ ::before ยึดตำแหน่งเทียบกับ .timeline */
+            padding-left: 28px;
+            /* เว้นพื้นที่ซ้ายสำหรับเส้นและจุด */
+        }
+
+        .timeline::before {
+            /* เส้นแนวตั้งสีเทา — วาดด้วย CSS ไม่ต้องเขียน HTML */
+            content: '';
+            position: absolute;
+            left: 7px;
+            /* ห่างจากซ้าย 7px */
+            top: 0;
+            bottom: 0;
+            /* ยืดตั้งแต่บนสุดถึงล่างสุดของ .timeline */
+            width: 2px;
+            /* ความกว้างเส้น */
+            background: var(--timeline-line);
+            border-radius: 2px;
+        }
+
+        .tl-item {
+            position: relative;
+            /* ทำให้ ::before ยึดตำแหน่งเทียบกับ .tl-item */
+            margin-bottom: 28px;
+        }
+
+        .tl-item::before {
+            /* จุดกลมสีน้ำเงินบนเส้นไทม์ไลน์ */
+            content: '';
+            position: absolute;
+            left: -24px;
+            /* ชิดซ้าย — ตรงกับตำแหน่งเส้น */
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            /* วงกลม */
+            background: var(--accent2);
+            /* สีน้ำเงิน */
+            border: 3px solid var(--bg);
+            /* วงแหวนสีพื้นหลัง — ทำให้ดูมีช่องว่างระหว่างจุดกับเส้น */
+            box-shadow: 0 0 0 2px var(--accent2);
+            /* วงแหวนน้ำเงินรอบนอก */
+        }
+
+        .tl-meta {
+            font-size: .8rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .tl-org {
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 2px 0 6px;
+        }
+
+        .tl-desc {
+            color: var(--text-sub);
+            font-size: .9rem;
+            line-height: 1.65;
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       ACCORDION — กล่องเหตุผลที่อยากเข้า DevPool
+       หลักการ: ซ่อน/แสดงเนื้อหาด้วย max-height แทน display:none
+       เหตุผล: CSS transition ทำงานกับตัวเลขได้ แต่ทำงานกับ display ไม่ได้
+    ═══════════════════════════════════════════════════════ */
+
+        .why-block {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            /* ซ่อนส่วน .why-body ที่ยังไม่ได้เปิด */
+            box-shadow: var(--shadow);
+        }
+
+        .why-trigger {
+            /* ปุ่มที่กดแล้ว accordion เปิด/ปิด */
+            width: 100%;
+            /* ยืดเต็มความกว้าง */
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* justify-content: space-between = ดัน text ซ้าย, icon ขวา */
+            cursor: pointer;
+            background: none;
+            border: none;
+            /* ลบ style ปุ่มเริ่มต้นของเบราว์เซอร์ */
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: 'Sarabun', sans-serif;
+            text-align: left;
+            transition: background var(--transition);
+        }
+
+        .why-trigger:hover {
+            background: var(--tag-bg);
+        }
+
+        /* พื้นหลังเปลี่ยนเมื่อ hover */
+
+        .why-trigger .icon {
+            font-size: 1.2rem;
+            transition: transform .3s;
+            /* animation ลูกศรหมุน */
+            display: inline-block;
+            /* ต้องใส่เพื่อให้ transform ทำงาน */
+        }
+
+        .why-trigger.open .icon {
+            transform: rotate(180deg);
+            /* หมุน 180° เมื่อเปิด ▾ → ▴ */
+        }
+
+        .why-body {
+            /* ส่วนเนื้อหาที่ซ่อนอยู่ */
+            max-height: 0;
+            /* สูง 0 = ซ่อนอยู่ */
+            overflow: hidden;
+            /* ซ่อนส่วนที่เกิน max-height */
+            transition: max-height .45s cubic-bezier(.4, 0, .2, 1), padding .3s;
+            /* animation เปลี่ยน max-height จาก 0 → 400px = ค่อย ๆ เปิดออก */
+            padding: 0 24px;
+            /* padding ซ้าย-ขวา มีตลอด, บน-ล่าง = 0 (ยังปิดอยู่) */
+        }
+
+        .why-body.open {
+            max-height: 400px;
+            /* เปิดแล้ว — ให้สูงได้ถึง 400px */
+            padding: 0 24px 24px;
+            /* เพิ่ม padding ล่าง 24px เมื่อเปิด */
+        }
+
+        .why-body p {
+            color: var(--text-sub);
+            line-height: 1.75;
+            font-size: .95rem;
+            margin-top: 4px;
+        }
+
+        .divider-inner {
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* เส้นคั่นระหว่างข้อ */
+
+
+        /* ═══════════════════════════════════════════════════════
+       EDUCATION GRID — การศึกษา
+    ═══════════════════════════════════════════════════════ */
+
+        .edu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* 2 คอลัมน์เท่ากัน */
+            gap: 14px;
+        }
+
+        @media (max-width: 540px) {
+            .edu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* มือถือ: เปลี่ยนเป็น 1 คอลัมน์ */
+        }
+
+        .edu-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .edu-level {
+            font-size: .76rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .edu-major {
+            font-weight: 700;
+            font-size: .95rem;
+            margin-bottom: 3px;
+        }
+
+        .edu-school {
+            font-size: .85rem;
+            color: var(--text-sub);
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       FOOTER — ส่วนล่างสุด
+    ═══════════════════════════════════════════════════════ */
+
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            font-size: .85rem;
+            color: var(--text-sub);
+        }
+
+        footer a {
+            color: var(--accent2);
+            text-decoration: none;
+        }
+
+        /* ลิงก์สีน้ำเงิน ไม่มีขีดเส้น */
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* เมื่อ hover ถึงแสดงขีดเส้นใต้ */
+
+
+        /* ═══════════════════════════════════════════════════════
+       RESPONSIVE — ปรับ padding บนมือถือ
+    ═══════════════════════════════════════════════════════ */
+
+        @media (max-width: 600px) {
+
+            /* @media = "ถ้าหน้าจอกว้างไม่เกิน 600px (มือถือ) ใช้ CSS ชุดนี้" */
+            .hero {
+                padding: 100px 16px 50px;
+            }
+
+            /* ลด padding ซ้าย-ขวา */
+            .section {
+                padding: 44px 16px;
+            }
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+       FADE-IN ON SCROLL — element ค่อย ๆ โผล่เมื่อ scroll ลงมา
+       CSS เตรียมสถานะ "ซ่อน" และ "แสดง"
+       JavaScript จะเป็นคนเพิ่ม class .visible ตอนที่เห็นใน viewport
+    ═══════════════════════════════════════════════════════ */
+
+        .fade-in {
+            opacity: 0;
+            /* ซ่อน — โปร่งใสทั้งหมด */
+            transform: translateY(20px);
+            /* อยู่ต่ำกว่าตำแหน่งจริง 20px */
+            transition: opacity .6s, transform .6s;
+            /* animation เมื่อเปลี่ยนสถานะ */
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            /* แสดง — ทึบแสงเต็ม */
+            transform: translateY(0);
+            /* กลับสู่ตำแหน่งจริง */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════════════════════════════
+       ปุ่มสลับ Dark/Light Mode (JS Interaction #1)
+       id="theme-toggle" ให้ JS หาเจอด้วย getElementById
+  ══════════════════════════════════════════════════════ -->
+    <button id="theme-toggle" aria-label="สลับธีม">
+        <!-- aria-label ช่วย screen reader อ่านชื่อปุ่มให้ผู้พิการทางสายตา -->
+        <span id="theme-icon">🌙</span> <!-- JS จะเปลี่ยน emoji นี้ -->
+        <span id="theme-label">Dark</span> <!-- JS จะเปลี่ยนข้อความนี้ -->
+    </button>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       HERO SECTION — หน้าแรก
+  ══════════════════════════════════════════════════════ -->
+    <section class="hero">
+        <div class="hero-inner"> <!-- กล่องเนื้อหา max-width 700px อยู่กึ่งกลาง -->
+
+            <!-- Avatar — ใส่ <img> แทน placeholder ถ้ามีรูปจริง -->
+            <div class="avatar-wrap">
+                <div class="avatar-placeholder">ส</div>
+                <!-- แสดงตัวอักษรแรกของชื่อ "ส" บน gradient น้ำเงิน-ส้ม -->
+                <!-- ถ้าอยากใส่รูปจริง: <img src="photo.jpg" alt="โสภณัฐ สีภักดี" /> -->
+            </div>
+
+            <!-- ป้ายสังกัด — แสดงเหนือชื่อ -->
+            <p class="hero-eyebrow">DevPool 2569 · ฝ่ายพัฒนาระบบดิจิทัล · กฟภ.</p>
+
+            <!-- ชื่อ — <span> ทำให้นามสกุลเป็นสีน้ำเงิน -->
+            <h1>โสภณัฐ <span>สีภักดี</span></h1>
+
+            <!-- ตำแหน่งงาน -->
+            <p class="hero-sub">ช่างไฟฟ้า · Digital Coordinator · Automation Enthusiast</p>
+
+            <!-- Badge ทักษะ — เรียงแนวนอน ขึ้นบรรทัดใหม่อัตโนมัติ -->
+            <div class="badge-row">
+                <span class="badge">RPA</span>
+                <span class="badge">PowerAutomate</span>
+                <span class="badge">Python</span>
+                <span class="badge">Google Apps Script</span>
+                <span class="badge">GIS Survey</span>
+                <span class="badge">SAP</span>
+            </div>
+
+            <!-- ลูกศรเด้ง — บอกให้ scroll ลง -->
+            <p class="scroll-hint">↓ เลื่อนลงเพื่อดูรายละเอียด</p>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       WHY DEVPOOL — เหตุผลที่สมัคร (Accordion = JS Interaction #2)
+       class="fade-in" ทำให้ JS ค่อย ๆ โผล่เมื่อ scroll ลงมาถึง
+  ══════════════════════════════════════════════════════ -->
+    <section class="section fade-in">
+        <p class="section-label">เหตุผลที่อยากเข้าร่วม</p>
+        <h2>ทำไมถึงสมัคร DevPool?</h2>
+
+        <div class="why-block">
+
+            <!-- ─── ข้อ 1 ─────────────────────────────────── -->
+            <button class="why-trigger" aria-expanded="false">
+                <!-- aria-expanded บอก screen reader ว่า accordion เปิดหรือปิดอยู่ -->
+                <!-- JS จะเปลี่ยนเป็น "true" เมื่อเปิด -->
+                <span>อยากต่อยอดจากงานอัตโนมัติที่ทำอยู่ให้เป็นระบบจริง</span>
+                <span class="icon">▾</span> <!-- ลูกศร — JS หมุน 180° เมื่อเปิด -->
+            </button>
+            <div class="why-body">
+                <!-- เนื้อหาที่ซ่อนอยู่ — JS เพิ่ม class .open เพื่อเปิด -->
+                <p>ในงานปัจจุบันผมเขียน Script RPA และ PowerAutomate เพื่อลดงาน manual ในหน่วยงาน
+                    แต่เครื่องมือเหล่านั้นมีข้อจำกัดมาก อยากเรียนรู้การพัฒนา Web Application จริง ๆ
+                    เพื่อสร้างระบบที่ยืดหยุ่นกว่าและดูแลรักษาได้ในระยะยาว</p>
+            </div>
+            <div class="divider-inner"></div> <!-- เส้นคั่น -->
+
+            <!-- ─── ข้อ 2 ─────────────────────────────────── -->
+            <button class="why-trigger" aria-expanded="false">
+                <span>อยากเป็นคนกลางระหว่างงานไฟฟ้าและงาน IT</span>
+                <span class="icon">▾</span>
+            </button>
+            <div class="why-body">
+                <p>ผมทำงานสำรวจเสาไฟฟ้า 115kV เขียน GIS Survey และดูแลระบบคอมพิวเตอร์ในสำนักงานมาหลายปี
+                    เห็นว่ามีช่องว่างมากระหว่าง "คนที่รู้งานสนาม" กับ "คนที่พัฒนาระบบ" DevPool
+                    คือโอกาสที่จะเชื่อมช่องว่างนั้นด้วยตัวเอง</p>
+            </div>
+            <div class="divider-inner"></div>
+
+            <!-- ─── ข้อ 3 ─────────────────────────────────── -->
+            <button class="why-trigger" aria-expanded="false">
+                <span>ชอบเรียนรู้สิ่งใหม่ตลอดเวลา และพร้อมลงมือจริง</span>
+                <span class="icon">▾</span>
+            </button>
+            <div class="why-body">
+                <p>ผมเป็นผู้ช่วยวิทยากรสอน RPA ให้ กฟภ. และเคยผ่านการแข่งขัน Digital Skill Competition มาแล้ว —
+                    ไม่กลัวที่จะเรียนรู้เครื่องมือใหม่ และเชื่อว่าการลงมือทำคือวิธีเรียนรู้ที่ดีที่สุด</p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       SKILLS — ทักษะ
+  ══════════════════════════════════════════════════════ -->
+    <section class="section fade-in">
+        <p class="section-label">ทักษะ</p>
+        <h2>สิ่งที่ทำได้</h2>
+        <div class="skills-grid"> <!-- Grid ปรับจำนวนคอลัมน์ตามขนาดจออัตโนมัติ -->
+            <div class="skill-item"><span class="skill-icon">🤖</span><span class="skill-name">RPA /
+                    PowerAutomate</span></div>
+            <div class="skill-item"><span class="skill-icon">🐍</span><span class="skill-name">Python</span></div>
+            <div class="skill-item"><span class="skill-icon">📜</span><span class="skill-name">Google Apps Script</span>
+            </div>
+            <div class="skill-item"><span class="skill-icon">🌐</span><span class="skill-name">HTML / Web App</span>
+            </div>
+            <div class="skill-item"><span class="skill-icon">🗺️</span><span class="skill-name">GIS Survey</span></div>
+            <div class="skill-item"><span class="skill-icon">📊</span><span class="skill-name">SAP · SCS · WOM</span>
+            </div>
+            <div class="skill-item"><span class="skill-icon">⚡</span><span class="skill-name">ไฟฟ้า 115kV</span></div>
+            <div class="skill-item"><span class="skill-icon">🇬🇧</span><span class="skill-name">ภาษาอังกฤษ</span></div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       EXPERIENCE — ประสบการณ์ทำงาน (Timeline)
+  ══════════════════════════════════════════════════════ -->
+    <section class="section fade-in">
+        <p class="section-label">ประสบการณ์</p>
+        <h2>เส้นทางการทำงาน</h2>
+        <div class="timeline">
+            <!-- CSS วาดเส้นแนวตั้งและจุดกลมด้วย ::before — ไม่ต้องเขียน HTML เพิ่ม -->
+
+            <div class="tl-item"> <!-- แต่ละ tl-item จะมีจุดกลมติดมาอัตโนมัติจาก CSS -->
+                <p class="tl-meta">2567 – ปัจจุบัน</p>
+                <p class="tl-org">PEA กฟจ.1</p>
+                <p class="tl-desc">สำรวจเสาไฟฟ้า 115kV · งานด้านโปสเตอร์ประชาสัมพันธ์ · เขียนเว็บแอพ · เขียน GIS Survey
+                </p>
+            </div>
+
+            <div class="tl-item">
+                <p class="tl-meta">2563 – 2567</p>
+                <p class="tl-org">PEA หนองเรือ</p>
+                <p class="tl-desc">รับคำร้องขอใช้ไฟฟ้าใหม่ ย้ายมิเตอร์ ขอขยายเขตระบบไฟฟ้า · ผู้ดูแลระบบ GIS ·
+                    ปิดใบสั่งงาน ZW01-ZW04 · ประสานงานดิจิทัลในสำนักงาน</p>
+            </div>
+
+            <div class="tl-item">
+                <p class="tl-meta">2557 – 2563</p>
+                <p class="tl-org">บริษัท สยามราช · PEA น้ำพอง</p>
+                <p class="tl-desc">ผูกและสับเปลี่ยนมิเตอร์เข้าระบบ SAP · บริหารใบสั่งงาน OMS · เขียนผังงานก่อสร้างเข้า
+                    GIS · ดูแลระบบคอมพิวเตอร์และเครือข่าย</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       EDUCATION — การศึกษา
+  ══════════════════════════════════════════════════════ -->
+    <section class="section fade-in">
+        <p class="section-label">การศึกษา</p>
+        <h2>วุฒิการศึกษา</h2>
+        <div class="edu-grid"> <!-- 2 คอลัมน์บน Desktop, 1 คอลัมน์บน Mobile -->
+            <div class="edu-card">
+                <p class="edu-level">ปวช.</p>
+                <p class="edu-major">ไฟฟ้าและอิเล็กทรอนิกส์</p>
+                <p class="edu-school">วิทยาลัยเทคนิคประจวบคีรีขันธ์</p>
+            </div>
+            <div class="edu-card">
+                <p class="edu-level">ปวส.</p>
+                <p class="edu-major">เทคนิคคอมพิวเตอร์</p>
+                <p class="edu-school">วิทยาลัยเทคนิคประจวบคีรีขันธ์</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════ -->
+    <footer>
+        <p>โสภณัฐ สีภักดี · DevPool 2569 · การไฟฟ้าส่วนภูมิภาค</p>
+        <p style="margin-top:6px">
+            <a href="https://portfolio-spnt.web.app" target="_blank">portfolio-spnt.web.app</a>
+            <!-- target="_blank" = เปิดลิงก์ใน Tab ใหม่ -->
+        </p>
+    </footer>
+
+
+    <!-- ══════════════════════════════════════════════════════
+       JAVASCRIPT — โค้ดโต้ตอบทั้งหมด
+       วางไว้ท้าย <body> เพื่อให้ HTML โหลดก่อน
+       ถ้าวางใน <head> JS จะหา element ใน HTML ไม่เจอ (ยังไม่ได้โหลด)
+  ══════════════════════════════════════════════════════ -->
+    <script>
+
+        /* ══════════════════════════════════════════════════════
+           JS ส่วนที่ 1: DARK / LIGHT MODE TOGGLE
+           การทำงาน:
+             คลิกปุ่ม → JS เปลี่ยน data-theme บน <html>
+             → CSS [data-theme="dark"] ทำงาน → สีเปลี่ยนทั้งหน้า
+        ══════════════════════════════════════════════════════ */
+
+        /* หา element ใน HTML ด้วย id แล้วเก็บในตัวแปร */
+        const toggle = document.getElementById('theme-toggle'); /* ตัวปุ่ม */
+        const themeIcon = document.getElementById('theme-icon');   /* <span> emoji */
+        const themeLabel = document.getElementById('theme-label');  /* <span> ข้อความ */
+        const html = document.documentElement;
+        /* document.documentElement = tag <html> ที่อยู่นอกสุดของทั้งหน้า */
+
+        /* อ่านธีมที่บันทึกไว้ก่อนหน้า — ทำให้รีเฟรชหน้าแล้วจำธีมเดิมได้ */
+        const saved = localStorage.getItem('theme') || 'light';
+        /* localStorage.getItem('theme') = อ่านค่าจากที่เก็บในเบราว์เซอร์ */
+        /* || 'light' = ถ้าไม่มีค่าบันทึกไว้ (null) ให้ใช้ 'light' แทน */
+        applyTheme(saved); /* เรียก function ใส่ธีมทันทีตอนโหลดหน้า */
+
+        /* ฟัง Event "คลิก" บนปุ่ม — เมื่อคลิกให้รัน function ข้างใน */
+        toggle.addEventListener('click', function () {
+
+            /* อ่านธีมปัจจุบันจาก attribute บน <html> */
+            const current = html.getAttribute('data-theme');
+
+            /* สลับธีม — ternary operator (if แบบสั้น) */
+            /* อ่านว่า: "ถ้า current เท่ากับ 'light' ให้ next = 'dark' ถ้าไม่ใช่ให้ next = 'light'" */
+            const next = current === 'light' ? 'dark' : 'light';
+
+            applyTheme(next); /* ใส่ธีมใหม่ */
+
+            /* บันทึกธีมใหม่ลง localStorage */
+            localStorage.setItem('theme', next);
+            /* localStorage.setItem(key, value) = บันทึกข้อมูลในเบราว์เซอร์ */
+            /* ข้อมูลนี้ยังอยู่แม้ปิด Tab หรือปิดเบราว์เซอร์ */
+        });
+
+        /* function สำหรับใส่ธีม — รับ parameter "theme" เป็น 'light' หรือ 'dark' */
+        function applyTheme(theme) {
+
+            /* เปลี่ยน attribute data-theme บน <html> */
+            /* ทันทีที่เปลี่ยน CSS [data-theme="dark"] จะเริ่มหรือหยุดทำงาน */
+            html.setAttribute('data-theme', theme);
+
+            /* เปลี่ยน emoji และข้อความในปุ่มตามธีม */
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';    /* textContent = ข้อความข้างใน element */
+                themeLabel.textContent = 'Light'; /* ตอนโหมดมืด ปุ่มบอกว่าจะสลับไป Light */
+            } else {
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Dark';  /* ตอนโหมดสว่าง ปุ่มบอกว่าจะสลับไป Dark */
+            }
+        }
+
+
+        /* ══════════════════════════════════════════════════════
+           JS ส่วนที่ 2: ACCORDION (เหตุผลที่อยากเข้า DevPool)
+           การทำงาน:
+             คลิกปุ่ม → เช็คว่าเปิดอยู่ไหม
+             → ปิดทุกอัน → เปิดเฉพาะอันที่คลิก (ถ้ามันปิดอยู่)
+        ══════════════════════════════════════════════════════ */
+
+        /* querySelectorAll = หา element ทุกตัวที่มี class="why-trigger" */
+        /* คืนค่าเป็น NodeList (คล้าย array) */
+        const triggers = document.querySelectorAll('.why-trigger');
+
+        /* วนลูปทุกปุ่ม แล้วใส่ event listener แต่ละอัน */
+        triggers.forEach(function (btn) {
+
+            btn.addEventListener('click', function () {
+
+                /* nextElementSibling = element ถัดไปใน HTML */
+                /* ปุ่ม → .why-body (เนื้อหาที่ซ่อนอยู่) อยู่ถัดกัน */
+                const body = btn.nextElementSibling;
+
+                /* เช็คว่า .why-body ของปุ่มนี้เปิดอยู่ไหม */
+                /* classList.contains = ตรวจว่ามี class นี้ติดอยู่ไหม — คืนค่า true/false */
+                const isOpen = body.classList.contains('open');
+
+                /* ขั้นที่ 1: ปิดทุกอัน */
+                triggers.forEach(function (b) {
+                    b.classList.remove('open');             /* ลบ class .open จากปุ่ม */
+                    b.setAttribute('aria-expanded', 'false'); /* อัปเดต accessibility */
+                    b.nextElementSibling.classList.remove('open'); /* ลบ .open จากเนื้อหา */
+                });
+
+                /* ขั้นที่ 2: เปิดเฉพาะอันที่คลิก — แต่เฉพาะกรณีมันปิดอยู่ */
+                /* !isOpen = "ไม่ใช่ open" = "ปิดอยู่" */
+                /* ถ้าคลิกอันที่เปิดอยู่แล้ว จะไม่เปิดซ้ำ — ทำให้ปิดได้ */
+                if (!isOpen) {
+                    btn.classList.add('open');              /* เพิ่ม class .open ให้ปุ่ม */
+                    btn.setAttribute('aria-expanded', 'true');
+                    body.classList.add('open');             /* เพิ่ม .open ให้เนื้อหา */
+                    /* CSS .why-body.open { max-height: 400px } จะทำงานทันที */
+                }
+            });
+        });
+
+
+        /* ══════════════════════════════════════════════════════
+           JS ส่วนที่ 3: SCROLL FADE-IN
+           การทำงาน:
+             ใช้ IntersectionObserver "เฝ้าดู" ว่า element เข้ามาในหน้าจอหรือยัง
+             เมื่อเข้ามา → เพิ่ม class .visible → CSS ทำ animation โผล่ขึ้น
+        ══════════════════════════════════════════════════════ */
+
+        /* หา element ทุกตัวที่มี class="fade-in" */
+        const faders = document.querySelectorAll('.fade-in');
+
+        /* สร้าง IntersectionObserver — API ของเบราว์เซอร์สำหรับเฝ้าดู element */
+        const observer = new IntersectionObserver(function (entries) {
+            /* entries = รายการ element ที่สถานะเปลี่ยนแปลง (เข้าหรือออกจากหน้าจอ) */
+
+            entries.forEach(function (entry) {
+
+                /* isIntersecting = true เมื่อ element ปรากฏในหน้าจอ */
+                if (entry.isIntersecting) {
+
+                    /* เพิ่ม class .visible — CSS จะเปลี่ยน opacity:0→1 และ translateY(20px)→0 */
+                    entry.target.classList.add('visible');
+
+                    /* หยุดเฝ้าดู element นี้ — ไม่ต้องทำงานซ้ำ ประหยัด memory */
+                    observer.unobserve(entry.target);
+                }
+            });
+
+        }, { threshold: 0.12 });
+        /* threshold: 0.12 = ทำงานเมื่อ element โผล่มา 12% ของพื้นที่ตัวเอง */
+        /* ถ้า 0 = ทำงานทันทีที่ pixel แรกปรากฏ, ถ้า 1 = รอจนเห็นทั้งหมด */
+
+        /* สั่งให้ observer เฝ้าดูทุก element ที่มี class .fade-in */
+        faders.forEach(function (el) { observer.observe(el); });
+
+    </script>
+
+</body>
+
+</html>
