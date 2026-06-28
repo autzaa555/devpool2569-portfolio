@@ -1066,13 +1066,24 @@
 
 
         /* ══ LIGHTBOX ══ */
+        const lightbox = document.getElementById('lightbox');
+
+        document.getElementById('avatar-btn').addEventListener('click', function () {
+            lightbox.classList.add('show');
+        });
+
         lightbox.addEventListener('click', function (e) {
             if (e.target !== document.querySelector('#lightbox img')) {
                 lightbox.classList.remove('show');
             }
         });
+
         document.getElementById('lightbox-close').addEventListener('click', function () {
             lightbox.classList.remove('show');
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') lightbox.classList.remove('show');
         });
 
 
