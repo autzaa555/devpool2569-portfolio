@@ -782,6 +782,68 @@
             transform: translateY(0);
             /* กลับสู่ตำแหน่งจริง */
         }
+
+
+
+        /* ═══ LIGHTBOX ═══ */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, .85);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        #lightbox.show {
+            display: flex;
+        }
+
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 48px rgba(0, 0, 0, .6);
+            animation: popIn .25s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
+            z-index: 1000;
+        }
+
+        #lightbox-close:hover {
+            background: rgba(255, 255, 255, .3);
+        }
     </style>
 </head>
 
@@ -810,6 +872,11 @@
                 <img src="https://lh3.googleusercontent.com/d/1Sx-UsroguyDsimC0G8SKlONfSvJrqj8a" alt="โสภณัฐ สีภักดี" />
                 <!-- แสดงตัวอักษรแรกของชื่อ "ส" บน gradient น้ำเงิน-ส้ม -->
                 <!-- ถ้าอยากใส่รูปจริง: <img src="photo.jpg" alt="โสภณัฐ สีภักดี" /> -->
+            </div>
+            <!-- Lightbox -->
+            <div id="lightbox">
+                <button id="lightbox-close">✕</button>
+                <img src="https://lh3.googleusercontent.com/d/1Sx-UsroguyDsimC0G8SKlONfSvJrqj8a" alt="โสภณัฐ สีภักดี" />
             </div>
 
             <!-- ป้ายสังกัด — แสดงเหนือชื่อ -->
@@ -881,7 +948,8 @@
                 <span class="icon">▾</span>
             </button>
             <div class="why-body">
-                <p>ผมเป็นผู้ช่วยวิทยากรสอน RPA ให้ กฟภ. ไม่กลัวที่จะเรียนรู้เครื่องมือใหม่ และเชื่อว่าการลงมือทำคือวิธีเรียนรู้ที่ดีที่สุด</p>
+                <p>ผมเป็นผู้ช่วยวิทยากรสอน RPA ให้ กฟภ. ไม่กลัวที่จะเรียนรู้เครื่องมือใหม่
+                    และเชื่อว่าการลงมือทำคือวิธีเรียนรู้ที่ดีที่สุด</p>
             </div>
 
         </div>
@@ -989,6 +1057,28 @@
        ถ้าวางใน <head> JS จะหา element ใน HTML ไม่เจอ (ยังไม่ได้โหลด)
   ══════════════════════════════════════════════════════ -->
     <script>
+
+
+
+
+
+
+
+
+        /* ══ LIGHTBOX ══ */
+        lightbox.addEventListener('click', function (e) {
+            if (e.target !== document.querySelector('#lightbox img')) {
+                lightbox.classList.remove('show');
+            }
+        });
+        document.getElementById('lightbox-close').addEventListener('click', function () {
+            lightbox.classList.remove('show');
+        });
+
+
+
+
+
 
         /* ══════════════════════════════════════════════════════
            JS ส่วนที่ 1: DARK / LIGHT MODE TOGGLE
