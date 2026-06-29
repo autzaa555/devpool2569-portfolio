@@ -12,8 +12,11 @@ devpool2569-portfolio
     │   └── กำหนด Responsive Layout
     │
     └── <body>
+        ├── Weather Badge (สภาพอากาศอุดรธานี)   ← เพิ่มใหม่
         ├── ปุ่ม Toggle Theme
         ├── Hero Section
+        │   ├── Avatar (คลิกได้)                ← อัปเดต
+        │   └── Lightbox Popup                  ← เพิ่มใหม่
         ├── Section ทำไมถึงสมัคร
         ├── Section ทักษะ
         ├── Section ประสบการณ์
@@ -22,7 +25,7 @@ devpool2569-portfolio
         └── Footer
 ```
 
-## คำอธิบายโครงสร้าง 
+## คำอธิบายโครงสร้าง
 
 ### devpool2569-portfolio
 
@@ -72,10 +75,10 @@ devpool2569-portfolio
 ตัวอย่าง
 
 ```css
-:root{
-  --bg:#ffffff;
-  --text:#222222;
-  --primary:#ff7a00;
+:root {
+  --bg: #ffffff;
+  --text: #222222;
+  --primary: #ff7a00;
 }
 ```
 
@@ -88,9 +91,9 @@ devpool2569-portfolio
 ตัวอย่าง
 
 ```css
-[data-theme="dark"]{
-  --bg:#0D1117;
-  --text:#E6EDF3;
+[data-theme="dark"] {
+  --bg: #0D1117;
+  --text: #E6EDF3;
 }
 ```
 
@@ -109,7 +112,7 @@ devpool2569-portfolio
 ตัวอย่าง
 
 ```css
-@media(max-width:768px){
+@media (max-width: 768px) {
   ...
 }
 ```
@@ -122,15 +125,50 @@ devpool2569-portfolio
 
 ---
 
+### Weather Badge *(เพิ่มใหม่)*
+
+แสดงสภาพอากาศปัจจุบันของจังหวัดอุดรธานีแบบ Real-time มุมซ้ายบนของหน้าจอ
+
+หน้าที่
+
+* เรียก Open-Meteo API เมื่อโหลดหน้า (ไม่ต้องมี API Key)
+* แปลงรหัส WMO Weather Code → emoji + คำอธิบายภาษาไทย
+* แสดงอุณหภูมิ (°C) และสภาพอากาศ
+
+ตัวอย่างที่แสดง
+
+```text
+🌧️ 33°C · ฝนปานกลาง · อุดรฯ
+```
+
+ออกแบบให้
+
+* `position: fixed` — ค้างอยู่มุมซ้ายบนแม้ scroll หน้า
+* ใช้ CSS Variables ชุดเดียวกับปุ่ม Toggle Theme — เปลี่ยนสีตาม Dark/Light Mode อัตโนมัติ
+* Pill shape เหมือนปุ่ม Toggle Theme — ดูเข้าชุดกัน
+
+API ที่ใช้
+
+```text
+https://api.open-meteo.com/v1/forecast
+  ?latitude=17.41          ← อุดรธานี
+  &longitude=102.79
+  &current=temperature_2m,weathercode
+  &timezone=Asia/Bangkok
+```
+
+---
+
 ### ปุ่ม Toggle Theme
 
-ปุ่มสำหรับสลับ Light Mode และ Dark Mode
+ปุ่มสำหรับสลับ Light Mode และ Dark Mode มุมขวาบนของหน้าจอ
 
 หน้าที่
 
 * รับการคลิกจากผู้ใช้
 * เรียก JavaScript
 * เปลี่ยนค่า Theme
+* บันทึกค่าลง `localStorage` — รีเฟรชหน้าแล้วจำธีมเดิมได้
 
 ตัวอย่าง
 
@@ -142,24 +180,46 @@ devpool2569-portfolio
 
 ### Hero Section
 
-ส่วนแรกของเว็บไซต์
-
-ใช้แนะนำตัวผู้สมัคร
+ส่วนแรกของเว็บไซต์ใช้แนะนำตัวผู้สมัคร
 
 ประกอบด้วย
 
 * ชื่อ
 * ตำแหน่งที่สมัคร
-* รูปภาพ
+* รูปภาพ Avatar (คลิกเพื่อขยายได้)
 * คำอธิบายสั้น ๆ
 
 เป็นส่วนที่ผู้เข้าชมเห็นก่อนส่วนอื่นทั้งหมด
+
+#### Avatar *(อัปเดต)*
+
+รูปโปรไฟล์วงกลมขนาด 130×130px มีกรอบสีส้ม
+
+* `cursor: zoom-in` — บอกผู้ใช้ว่าคลิกได้
+* เมื่อคลิก → เปิด Lightbox แสดงรูปขนาดใหญ่
+
+#### Lightbox Popup *(เพิ่มใหม่)*
+
+ป๊อปอัพแสดงรูป Avatar ขนาดใหญ่ทับหน้าจอ
+
+หน้าที่
+
+* คลิก Avatar → เปิด Lightbox
+* คลิกพื้นหลังสีดำ → ปิด Lightbox
+* กดปุ่ม ✕ มุมขวาบนของรูป → ปิด Lightbox
+* กด `Escape` บน Keyboard → ปิด Lightbox
+
+ออกแบบให้
+
+* `position: fixed` ครอบทั้งหน้าจอ พื้นหลัง `rgba(0,0,0,.85)` + `backdrop-filter: blur`
+* ปุ่ม ✕ ใช้ `position: absolute` เทียบกับกล่องรูป — ลอยอยู่มุมขวาบนของรูปโดยตรง
+* Animation `popIn` เมื่อเปิด — รูปขยายจาก 85% → 100%
 
 ---
 
 ### Section ทำไมถึงสมัคร
 
-ใช้แสดงเหตุผลที่ต้องการเข้าร่วม DevPool
+ใช้แสดงเหตุผลที่ต้องการเข้าร่วม DevPool ในรูปแบบ Accordion
 
 ตัวอย่างเนื้อหา
 
@@ -173,69 +233,53 @@ devpool2569-portfolio
 
 ### Section ทักษะ
 
-แสดงความสามารถทางเทคนิค
+แสดงความสามารถทางเทคนิคในรูปแบบ Grid Card
 
 เช่น
 
-* HTML
-* CSS
-* JavaScript
-* Firebase
+* RPA / PowerAutomate
+* Python
 * Google Apps Script
-* Git
-* SQL
-
-อาจแสดงเป็น
-
-* Card
-* Badge
-* Progress Bar
-
-เพื่อให้อ่านง่าย
+* HTML / Web App
+* GIS Survey
+* SAP · SCS · WOM
 
 ---
 
 ### Section ประสบการณ์
 
-รวบรวมประสบการณ์การทำงานและโครงการที่ผ่านมา
+รวบรวมประสบการณ์การทำงานและโครงการที่ผ่านมา แสดงในรูปแบบ Timeline
 
 ตัวอย่าง
 
-* ระบบ Google Apps Script
-* ระบบจัดการข้อมูล PEA
-* งาน AI และ YOLO
-* งาน Firebase
-
-แสดงให้เห็นถึงความสามารถในการทำงานจริง
+* เขียนเว็บแอพ / พัฒนานวัตกรรม (2567–ปัจจุบัน)
+* ผู้ดูแลระบบ GIS / รับคำร้องขอใช้ไฟฟ้า (2563–2567)
+* ผูกและสับเปลี่ยนมิเตอร์เข้าระบบ SAP (2557–2563)
 
 ---
 
 ### Section การศึกษา
 
-แสดงประวัติการศึกษา
+แสดงประวัติการศึกษาในรูปแบบ Grid 2 คอลัมน์
 
 เช่น
 
-* วุฒิการศึกษา
-* หลักสูตรอบรม
-* Certificate
-
-ช่วยยืนยันพื้นฐานความรู้ของผู้สมัคร
+* ปวช. ไฟฟ้าและอิเล็กทรอนิกส์
+* ปวส. เทคนิคคอมพิวเตอร์
 
 ---
 
 ### JavaScript Logic
 
-ส่วนที่ควบคุมพฤติกรรมของเว็บไซต์
+ส่วนที่ควบคุมพฤติกรรมของเว็บไซต์ แบ่งเป็น 4 ส่วน
 
-ตัวอย่าง
-
-* Theme Toggle
-* Scroll Animation
-* Event Handling
-* Dynamic Content
-
-ทำให้เว็บไซต์มีความโต้ตอบกับผู้ใช้
+| ส่วน | หน้าที่ |
+|---|---|
+| Lightbox | เปิด/ปิดป๊อปอัพรูป Avatar |
+| Theme Toggle | สลับ Dark/Light Mode + บันทึกลง localStorage |
+| Accordion | เปิด/ปิดคำตอบในส่วน "ทำไมถึงสมัคร" |
+| Scroll Fade-in | element ค่อย ๆ โผล่เมื่อ scroll ลงมาถึง |
+| Weather Fetch | ดึงข้อมูลสภาพอากาศจาก Open-Meteo API |
 
 ---
 
@@ -243,14 +287,12 @@ devpool2569-portfolio
 
 ส่วนท้ายของเว็บไซต์
 
-มักประกอบด้วย
+ประกอบด้วย
 
-* Email
-* GitHub
-* LinkedIn
-* Copyright
-
-ใช้เป็นช่องทางติดต่อเพิ่มเติม
+* ชื่อ-สกุล
+* โปรแกรม DevPool 2569
+* สังกัด (การไฟฟ้าส่วนภูมิภาค)
+* ลิงก์ portfolio-spnt.web.app
 
 ---
 
@@ -297,26 +339,66 @@ Browser Render Engine
 Dark Mode แสดงผลทันที
 ```
 
+---
+
+# ลำดับการทำงานของ Lightbox *(เพิ่มใหม่)*
+
+```text
+ผู้ใช้คลิก Avatar
+│
+▼
+JS: addEventListener('click') บน #avatar-btn
+│
+└─ lightbox.classList.add('show')
+│
+▼
+CSS: #lightbox.show { display: flex }
+│
+└─ Lightbox โผล่ขึ้นทับหน้าจอ + animation popIn
+│
+▼
+ผู้ใช้ปิด Lightbox (3 ทาง)
+│
+├─ คลิกพื้นหลังสีดำ  → e.target !== img → classList.remove('show')
+├─ กดปุ่ม ✕          → classList.remove('show')
+└─ กด Escape          → e.key === 'Escape' → classList.remove('show')
+│
+▼
+CSS: #lightbox { display: none }
+│
+└─ Lightbox หายไป
+```
+
+---
+
+# ลำดับการทำงานของ Weather Badge *(เพิ่มใหม่)*
+
+```text
+หน้าเว็บโหลด
+│
+▼
+JS: IIFE fetchWeather() รันทันที
+│
+▼
+fetch(Open-Meteo API)
+│
+├─ สำเร็จ
+│   ├─ แปลง JSON → อ่าน temperature_2m และ weathercode
+│   ├─ ค้นหา weathercode ในตาราง WMO → ได้ emoji + คำอธิบาย
+│   └─ แสดงผล เช่น "🌧️ 33°C · ฝนปานกลาง · อุดรฯ"
+│
+└─ ล้มเหลว (ไม่มีเน็ต / API ล่ม)
+    └─ แสดง "❓ โหลดไม่ได้"
+```
+
 ## สรุปการไหลของระบบ
 
 ```text
 ผู้ใช้
   │
-  ▼
-คลิกปุ่ม Theme
+  ├─► คลิกปุ่ม Theme ──► JS เปลี่ยน data-theme ──► CSS Variables เปลี่ยน ──► Browser Re-render
   │
-  ▼
-JavaScript Event
+  ├─► คลิก Avatar ──────► JS เพิ่ม .show ─────────► Lightbox แสดงผล
   │
-  ▼
-เปลี่ยนค่า data-theme
-  │
-  ▼
-CSS Variables เปลี่ยนค่า
-  │
-  ▼
-Browser Re-render
-  │
-  ▼
-หน้าเว็บเปลี่ยนเป็น Dark Mode
+  └─► โหลดหน้าเว็บ ─────► fetch Open-Meteo ────────► Weather Badge แสดงผล
 ```
