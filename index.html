@@ -850,28 +850,48 @@
 
         #weather-badge {
             position: fixed;
+            /* ค้างอยู่ตำแหน่งเดิมแม้ scroll หน้าไปเรื่อย ๆ */
             top: 18px;
             left: 18px;
+            /* ห่างจากขอบบน 18px, ขอบซ้าย 18px — แนวเดียวกับ #theme-toggle ที่อยู่ขวา */
             z-index: 100;
+            /* ลอยอยู่เหนือ element อื่น — ค่าเท่ากับ #theme-toggle เพื่อให้อยู่ระดับเดียวกัน */
             background: var(--bg-card);
+            /* สีพื้นหลัง — ดึงจากตัวแปร เปลี่ยนตาม dark/light mode อัตโนมัติ */
             border: 1.5px solid var(--border);
+            /* เส้นขอบ — สีดึงจากตัวแปร */
             border-radius: 50px;
+            /* โค้งมนมาก — ทำให้เป็นทรงยาวรี (pill shape) เหมือน #theme-toggle */
             padding: 7px 14px;
+            /* ระยะห่างภายใน บน-ล่าง 7px, ซ้าย-ขวา 14px — ขนาดเท่ากับ #theme-toggle */
             font-size: .85rem;
+            /* .85rem = 85% ของขนาด font default — เล็กกว่าปกติเล็กน้อย */
             color: var(--text-main);
+            /* สีตัวอักษร — ดึงจากตัวแปร เปลี่ยนตาม dark/light mode */
             box-shadow: var(--shadow);
+            /* เงาใต้ badge — ดึงจากตัวแปร */
             display: flex;
+            /* เปิดใช้ Flexbox เพื่อเรียง emoji และข้อความในแนวนอน */
             align-items: center;
+            /* จัดกึ่งกลางแนวตั้ง — ทำให้ emoji กับข้อความอยู่ระดับเดียวกัน */
             gap: 6px;
+            /* ช่องว่างระหว่าง emoji และข้อความ */
             font-family: 'Space Grotesk', sans-serif;
+            /* ฟอนต์เดียวกับ #theme-toggle — ให้ดูเข้าชุดกัน */
             font-weight: 600;
+            /* ตัวหนาปานกลาง (semibold) */
             transition: background var(--transition), color var(--transition), border var(--transition);
+            /* animation เมื่อสลับ dark/light mode — ทำให้สีเปลี่ยนแบบ fade แทนกระพริบ */
+            /* ใส่เฉพาะ property ที่จะเปลี่ยน ประหยัดกว่าใส่ transition: all */
             cursor: default;
+            /* cursor ปกติ — ไม่ใช่รูปมือ เพราะ badge นี้ไม่ได้คลิกได้ */
             user-select: none;
+            /* ป้องกันผู้ใช้ accidentally ลากเลือกข้อความใน badge */
         }
 
         #weather-badge:hover {
             border-color: var(--accent2);
+            /* เส้นขอบเปลี่ยนเป็นสีน้ำเงิน เมื่อเอาเมาส์ไปวาง — visual feedback เบา ๆ */
         }
     </style>
 </head>
@@ -1040,7 +1060,7 @@
                 <p class="tl-desc"> · เขียนเว็บแอพ · พัฒนานวัตกรรม · </p>
                 <p class="tl-desc"> · เขียน N8N · OPSA API Workflow OPSA_Error_list · </p>
                 <p class="tl-desc"> · ผู้ดูแลระบบ GIS LOAD LineBot12เขต
-                    ส่งพิกัดมิเตอร์หม้อแปลงเฟสพีดเดอร์ความสัมพันธ์มิเตอร์หม้อแปลงโหลดกระแส</p>
+                    ส่งพิกัดมิเตอร์หม้อแปลงเฟสฟีดเดอร์ความสัมพันธ์มิเตอร์หม้อแปลงโหลดกระแส</p>
                 <p class="tl-desc"> · เขียน GIS Survey</p>
                 <p class="tl-desc"> · สำรวจเสาไฟฟ้า 115kV </p>
                 <p class="tl-desc"> · งานด้านโปสเตอร์ประชาสัมพันธ์</p>
@@ -1126,65 +1146,162 @@
 
 
 
-        /* ══ LIGHTBOX ══ */
+        /* ══ LIGHTBOX — ป๊อปอัพรูปขนาดใหญ่เมื่อคลิก Avatar ══ */
+
+        /* หา element #lightbox แล้วเก็บในตัวแปร เพื่อใช้ซ้ำหลายครั้งโดยไม่ต้องค้นหาใหม่ทุกรอบ */
         const lightbox = document.getElementById('lightbox');
 
+
+        /* ── เปิด Lightbox เมื่อคลิกรูป Avatar ─────────────────── */
         document.getElementById('avatar-btn').addEventListener('click', function () {
+
             lightbox.classList.add('show');
+            /* เพิ่ม class .show ให้ #lightbox */
+            /* CSS: #lightbox { display: none } → #lightbox.show { display: flex } */
+            /* ทำให้ lightbox โผล่ขึ้นมาทันที */
         });
 
+
+        /* ── ปิด Lightbox เมื่อคลิกพื้นหลังสีดำ ────────────────── */
         lightbox.addEventListener('click', function (e) {
+            /* e = Event Object — ข้อมูลของเหตุการณ์ที่เกิดขึ้น */
+            /* e.target = element ที่ถูกคลิกจริง ๆ */
+
             if (e.target !== document.querySelector('#lightbox img')) {
+                /* เช็คว่าสิ่งที่คลิกไม่ใช่ตัวรูป */
+                /* ถ้าคลิกรูป → ไม่ทำอะไร (ไม่ปิด) */
+                /* ถ้าคลิกพื้นหลังสีดำรอบ ๆ → ปิด lightbox */
+                /* เหตุผล: ถ้าไม่เช็ค การคลิกที่รูปก็จะปิด lightbox ด้วย */
+
                 lightbox.classList.remove('show');
+                /* ลบ class .show → CSS เปลี่ยน display กลับเป็น none → lightbox หายไป */
             }
         });
 
+
+        /* ── ปิด Lightbox เมื่อกดปุ่ม ✕ ──────────────────────────── */
         document.getElementById('lightbox-close').addEventListener('click', function () {
+
             lightbox.classList.remove('show');
+            /* ทำงานเหมือนคลิกพื้นหลัง — ลบ .show แล้ว lightbox หายไป */
         });
 
+
+        /* ── ปิด Lightbox เมื่อกดปุ่ม Escape บน keyboard ─────────── */
         document.addEventListener('keydown', function (e) {
+            /* keydown = event ที่ยิงทุกครั้งที่กดปุ่มบน keyboard */
+            /* ฟังที่ document แทน element เดี่ยว เพราะ keyboard event ไม่ได้ผูกกับ element ใด */
+
             if (e.key === 'Escape') lightbox.classList.remove('show');
+            /* e.key = ชื่อปุ่มที่กด เช่น 'Escape', 'Enter', 'ArrowUp' */
+            /* ถ้ากด Escape → ปิด lightbox */
+            /* UX มาตรฐาน: modal/popup ทุกอันควรปิดได้ด้วย Escape */
         });
 
 
 
 
         /* ══ WEATHER — Open-Meteo (ไม่ต้องมี API Key) ══ */
+
         (function fetchWeather() {
+            /* IIFE = Immediately Invoked Function Expression */
+            /* คือ function ที่ประกาศแล้วรันทันทีในบรรทัดเดียว */
+            /* วิธีเขียน: (function ชื่อ() { ... })() — วงเล็บท้ายสุดคือการ "เรียก" function */
+            /* ประโยชน์: ตัวแปรข้างใน (WMO, url) ถูกซ่อนไว้ใน scope นี้ */
+            /* ไม่รั่วออกไปปนกับตัวแปรอื่นในหน้า — ป้องกัน bug จากชื่อซ้ำกัน */
+
+
+            /* ── WMO Weather Code Table ──────────────────────────────
+               WMO (World Meteorological Organization) กำหนดรหัสตัวเลขมาตรฐาน
+               แทนสภาพอากาศแต่ละแบบ — Open-Meteo API ส่งรหัสเหล่านี้มาให้
+               Object นี้คือ "ตารางแปลรหัส" → [emoji, คำอธิบายภาษาไทย]
+               key   = รหัส WMO (ตัวเลข)
+               value = array 2 ช่อง: [emoji, ข้อความ]
+            ──────────────────────────────────────────────────────── */
             const WMO = {
-                0: ['☀️', 'แจ่มใส'], 1: ['🌤️', 'ใสเป็นส่วนใหญ่'],
-                2: ['⛅', 'มีเมฆบางส่วน'], 3: ['☁️', 'มีเมฆมาก'],
-                45: ['🌫️', 'หมอก'], 48: ['🌫️', 'หมอกน้ำแข็ง'],
-                51: ['🌦️', 'ฝนปรอย'], 53: ['🌦️', 'ฝนปรอยปานกลาง'],
-                55: ['🌧️', 'ฝนปรอยหนัก'], 61: ['🌧️', 'ฝนเบา'],
-                63: ['🌧️', 'ฝนปานกลาง'], 65: ['🌧️', 'ฝนหนัก'],
-                71: ['🌨️', 'หิมะเบา'], 80: ['🌦️', 'ฝนสลับ'],
-                81: ['🌧️', 'ฝนสลับหนัก'], 95: ['⛈️', 'พายุฝนฟ้าคะนอง'],
-                96: ['⛈️', 'พายุลูกเห็บ'], 99: ['⛈️', 'พายุรุนแรง'],
+                0: ['☀️', 'แจ่มใส'],            /* ท้องฟ้าโปร่งสมบูรณ์ */
+                1: ['🌤️', 'ใสเป็นส่วนใหญ่'],    /* มีเมฆนิดหน่อย */
+                2: ['⛅', 'มีเมฆบางส่วน'],      /* เมฆปานกลาง */
+                3: ['☁️', 'มีเมฆมาก'],          /* เมฆปกคลุมเกือบหมด */
+                45: ['🌫️', 'หมอก'],
+                48: ['🌫️', 'หมอกน้ำแข็ง'],       /* หมอกที่เกาะแข็งตามพื้นผิว */
+                51: ['🌦️', 'ฝนปรอย'],            /* ฝนละออง เบามาก */
+                53: ['🌦️', 'ฝนปรอยปานกลาง'],
+                55: ['🌧️', 'ฝนปรอยหนัก'],
+                61: ['🌧️', 'ฝนเบา'],             /* ฝนจริง แต่เบา */
+                63: ['🌧️', 'ฝนปานกลาง'],
+                65: ['🌧️', 'ฝนหนัก'],
+                71: ['🌨️', 'หิมะเบา'],           /* ไทยไม่มี แต่ใส่ไว้ครบ */
+                80: ['🌦️', 'ฝนสลับ'],            /* ฝนตกเป็นช่วง ๆ (shower) */
+                81: ['🌧️', 'ฝนสลับหนัก'],
+                95: ['⛈️', 'พายุฝนฟ้าคะนอง'],
+                96: ['⛈️', 'พายุลูกเห็บ'],
+                99: ['⛈️', 'พายุรุนแรง'],
             };
 
+
+            /* ── สร้าง URL สำหรับเรียก API ──────────────────────────
+               แยกเป็นหลายบรรทัดเพื่อให้อ่านง่าย JS จะต่อ string ให้อัตโนมัติ
+               URL จริงคือ:
+               https://api.open-meteo.com/v1/forecast
+                 ?latitude=17.41          ← ละติจูดอุดรธานี
+                 &longitude=102.79        ← ลองจิจูดอุดรธานี
+                 &current=temperature_2m,weathercode  ← ขอเฉพาะอุณหภูมิ+รหัสอากาศ ณ ปัจจุบัน
+                 &timezone=Asia/Bangkok   ← เวลาไทย (%2F คือ / แบบ URL encode)
+            ──────────────────────────────────────────────────────── */
             const url =
                 'https://api.open-meteo.com/v1/forecast' +
                 '?latitude=17.41&longitude=102.79' +
                 '&current=temperature_2m,weathercode' +
                 '&timezone=Asia%2FBangkok';
-            // https://api.open-meteo.com/v1/forecast?latitude=17.41&longitude=102.79&current=temperature_2m,weathercode&timezone=Asia%2FBangkok
+
+
+            /* ── เรียก API และแสดงผล ─────────────────────────────── */
             fetch(url)
+                /* fetch() = ฟังก์ชันของเบราว์เซอร์สำหรับดึงข้อมูลจาก URL */
+                /* ทำงานแบบ asynchronous — ไม่รอให้เสร็จก่อน JS บรรทัดถัดไปทำงานต่อได้เลย */
+                /* คืนค่าเป็น Promise (สัญญาว่าจะมีผลลัพธ์ในอนาคต) */
+
                 .then(r => r.json())
+                /* .then() = "เมื่อได้ผลแล้ว ทำสิ่งนี้ต่อ" */
+                /* r = Response object — ข้อมูลดิบที่เซิร์ฟเวอร์ส่งมา */
+                /* r.json() = แปลงข้อมูล JSON ที่เป็น text ให้กลายเป็น JS object */
+                /* คืนค่าเป็น Promise อีกชั้น จึงต่อ .then() ได้อีก */
+
                 .then(data => {
+                    /* data = JS object ที่แปลงจาก JSON แล้ว — ใช้งานได้เลย */
+
                     const temp = Math.round(data.current.temperature_2m);
+                    /* data.current.temperature_2m = อุณหภูมิ ณ ปัจจุบัน หน่วย °C (ทศนิยม เช่น 32.4) */
+                    /* Math.round() = ปัดเศษเป็นจำนวนเต็ม → 32.4 กลายเป็น 32 */
+
                     const code = data.current.weathercode;
+                    /* รหัส WMO สภาพอากาศ เช่น 0 = แจ่มใส, 63 = ฝนปานกลาง */
+
                     const [icon, desc] = WMO[code] || ['🌡️', 'ไม่ทราบ'];
+                    /* WMO[code] = ค้นหาในตารางด้วยรหัส — ได้ array เช่น ['🌧️', 'ฝนปานกลาง'] */
+                    /* || ['🌡️', 'ไม่ทราบ'] = ถ้าไม่พบรหัสในตาราง ให้ใช้ค่า default แทน */
+                    /* const [icon, desc] = ... = Destructuring — แตก array ออกเป็น 2 ตัวแปรทันที */
+                    /* เขียนแทน: const icon = arr[0]; const desc = arr[1]; */
+
                     document.getElementById('wx-icon').textContent = icon;
+                    /* ใส่ emoji ลงใน <span id="wx-icon"> */
+
                     document.getElementById('wx-text').textContent =
                         `${temp}°C · ${desc} · อุดรฯ`;
+                    /* Template Literal: ${} คือช่องใส่ตัวแปรใน string */
+                    /* ผลลัพธ์เช่น: "33°C · ฝนปานกลาง · อุดรฯ" */
                 })
+
                 .catch(() => {
+                    /* .catch() = จัดการ error — ทำงานเมื่อ fetch ล้มเหลว */
+                    /* สาเหตุที่พบบ่อย: ไม่มีอินเทอร์เน็ต, API ล่ม, CORS block */
                     document.getElementById('wx-icon').textContent = '❓';
                     document.getElementById('wx-text').textContent = 'โหลดไม่ได้';
+                    /* แสดงข้อความ error แทนที่จะปล่อยให้ badge ค้างแสดง "กำลังโหลด..." */
                 });
-        })();
+
+        })(); /* ← วงเล็บนี้คือการ "เรียก" IIFE ให้รันทันที */
 
 
 
