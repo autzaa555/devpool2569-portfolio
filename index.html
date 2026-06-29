@@ -1169,7 +1169,7 @@
                 '?latitude=17.41&longitude=102.79' +
                 '&current=temperature_2m,weathercode' +
                 '&timezone=Asia%2FBangkok';
-
+            // https://api.open-meteo.com/v1/forecast?latitude=17.41&longitude=102.79&current=temperature_2m,weathercode&timezone=Asia%2FBangkok
             fetch(url)
                 .then(r => r.json())
                 .then(data => {
