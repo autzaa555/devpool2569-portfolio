@@ -846,10 +846,46 @@
         #lightbox-close:hover {
             background: rgba(255, 255, 255, .45);
         }
+
+
+        #weather-badge {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 100;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            padding: 7px 14px;
+            font-size: .85rem;
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            transition: background var(--transition), color var(--transition), border var(--transition);
+            cursor: default;
+            user-select: none;
+        }
+
+        #weather-badge:hover {
+            border-color: var(--accent2);
+        }
     </style>
 </head>
 
 <body>
+
+
+    <div id="weather-badge">
+        <span id="wx-icon">⏳</span>
+        <span id="wx-text">กำลังโหลด...</span>
+    </div>
+
+
+
 
     <!-- ══════════════════════════════════════════════════════
        ปุ่มสลับ Dark/Light Mode (JS Interaction #1)
@@ -898,8 +934,8 @@
 
             <!-- Badge ทักษะ — เรียงแนวนอน ขึ้นบรรทัดใหม่อัตโนมัติ -->
             <div class="badge-row">
-                <span class="badge">Yolo Detection</span>
-                <span class="badge">RPA</span>
+                <span class="badge">N8N</span>
+                <span class="badge">Ai_Detection_RPA</span>
                 <span class="badge">PowerAutomate</span>
                 <span class="badge">Python</span>
                 <span class="badge">Google Apps Script</span>
@@ -932,7 +968,7 @@
             </button>
             <div class="why-body">
                 <!-- เนื้อหาที่ซ่อนอยู่ — JS เพิ่ม class .open เพื่อเปิด -->
-                <p>ในงานปัจจุบันผมเขียน Script RPA และ PowerAutomate N8N เพื่อลดงาน manual ในหน่วยงาน
+                <p>ในงานปัจจุบันผมเขียน Script RPA และ PowerAutomate N8N Ai_Detection_RPA เพื่อลดงาน manual ในหน่วยงาน
                     แต่เครื่องมือเหล่านั้นมีข้อจำกัดมาก อยากเรียนรู้การพัฒนา Web Application จริง ๆ
                     เพื่อสร้างระบบที่ยืดหยุ่นกว่าและดูแลรักษาได้ในระยะยาว</p>
             </div>
@@ -1048,6 +1084,10 @@
     </section>
 
 
+
+
+
+
     <!-- ══════════════════════════════════════════════════════
        FOOTER
   ══════════════════════════════════════════════════════ -->
@@ -1058,6 +1098,12 @@
             <!-- target="_blank" = เปิดลิงก์ใน Tab ใหม่ -->
         </p>
     </footer>
+
+
+
+
+
+
 
 
     <!-- ══════════════════════════════════════════════════════
@@ -1094,6 +1140,45 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') lightbox.classList.remove('show');
         });
+
+
+
+
+        /* ══ WEATHER — Open-Meteo (ไม่ต้องมี API Key) ══ */
+        (function fetchWeather() {
+            const WMO = {
+                0: ['☀️', 'แจ่มใส'], 1: ['🌤️', 'ใสเป็นส่วนใหญ่'],
+                2: ['⛅', 'มีเมฆบางส่วน'], 3: ['☁️', 'มีเมฆมาก'],
+                45: ['🌫️', 'หมอก'], 48: ['🌫️', 'หมอกน้ำแข็ง'],
+                51: ['🌦️', 'ฝนปรอย'], 53: ['🌦️', 'ฝนปรอยปานกลาง'],
+                55: ['🌧️', 'ฝนปรอยหนัก'], 61: ['🌧️', 'ฝนเบา'],
+                63: ['🌧️', 'ฝนปานกลาง'], 65: ['🌧️', 'ฝนหนัก'],
+                71: ['🌨️', 'หิมะเบา'], 80: ['🌦️', 'ฝนสลับ'],
+                81: ['🌧️', 'ฝนสลับหนัก'], 95: ['⛈️', 'พายุฝนฟ้าคะนอง'],
+                96: ['⛈️', 'พายุลูกเห็บ'], 99: ['⛈️', 'พายุรุนแรง'],
+            };
+
+            const url =
+                'https://api.open-meteo.com/v1/forecast' +
+                '?latitude=17.41&longitude=102.79' +
+                '&current=temperature_2m,weathercode' +
+                '&timezone=Asia%2FBangkok';
+
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    const temp = Math.round(data.current.temperature_2m);
+                    const code = data.current.weathercode;
+                    const [icon, desc] = WMO[code] || ['🌡️', 'ไม่ทราบ'];
+                    document.getElementById('wx-icon').textContent = icon;
+                    document.getElementById('wx-text').textContent =
+                        `${temp}°C · ${desc} · อุดรฯ`;
+                })
+                .catch(() => {
+                    document.getElementById('wx-icon').textContent = '❓';
+                    document.getElementById('wx-text').textContent = 'โหลดไม่ได้';
+                });
+        })();
 
 
 
