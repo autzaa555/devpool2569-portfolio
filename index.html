@@ -899,9 +899,24 @@
 <body>
 
 
+    <!-- ══ WEATHER BADGE — แสดงสภาพอากาศอุดรธานีมุมซ้ายบน ══ -->
     <div id="weather-badge">
+        <!-- div ทำหน้าที่เป็นกล่องรวม icon + ข้อความ -->
+        <!-- CSS: position:fixed top:18px left:18px — ค้างอยู่มุมซ้ายบนแม้ scroll หน้า -->
+        <!-- CSS: display:flex align-items:center — เรียง icon กับข้อความในแนวนอน กึ่งกลางแนวตั้ง -->
+        <!-- CSS: ใช้ตัวแปรชุดเดียวกับ #theme-toggle — เปลี่ยนสีตาม Dark/Light Mode อัตโนมัติ -->
+
         <span id="wx-icon">⏳</span>
+        <!-- แสดง emoji สภาพอากาศ -->
+        <!-- ค่าเริ่มต้น ⏳ = "กำลังโหลด" — JS จะมาเปลี่ยนเป็น emoji จริง เช่น 🌧️ ☀️ ⛅ -->
+        <!-- JavaScript: document.getElementById('wx-icon').textContent = icon -->
+
         <span id="wx-text">กำลังโหลด...</span>
+        <!-- แสดงข้อความอุณหภูมิและสภาพอากาศ -->
+        <!-- ค่าเริ่มต้น "กำลังโหลด..." — JS จะมาเปลี่ยนเมื่อ fetch API สำเร็จ -->
+        <!-- ตัวอย่างข้อความจริง: "33°C · ฝนปานกลาง · อุดรฯ" -->
+        <!-- ถ้า fetch ล้มเหลว: "โหลดไม่ได้" -->
+        <!-- JavaScript: document.getElementById('wx-text').textContent = `${temp}°C · ${desc} · อุดรฯ` -->
     </div>
 
 
